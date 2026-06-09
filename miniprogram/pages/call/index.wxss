@@ -1,0 +1,28 @@
+.call-page {
+  display: flex;
+  align-items: center;
+}
+
+.plate {
+  display: inline-block;
+  margin-top: 24rpx;
+  padding: 10rpx 18rpx;
+  border: 1rpx solid #cfd8e8;
+  border-radius: 8rpx;
+  color: #1c2940;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.message {
+  margin-top: 28rpx;
+  color: #4c5a70;
+  font-size: 30rpx;
+  line-height: 1.7;
+}
+
+.phone {
+  margin-top: 22rpx;
+  color: #647089;
+  font-size: 28rpx;
+}

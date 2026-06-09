@@ -1,0 +1,8 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+app:
+  public-base-url: ${APP_PUBLIC_BASE_URL:http://localhost:8081}
+  wechat:
+    app-id: ${WECHAT_APP_ID:}
+    app-secret: ${WECHAT_APP_SECRET:}

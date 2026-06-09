@@ -1,0 +1,9 @@
+<view class="page call-page">
+  <view class="panel">
+    <view class="title">联系车主挪车</view>
+    <view class="plate">{{vehicle.plateNo || "临时挪车联系"}}</view>
+    <view class="message">{{vehicle.comfortMessage || "正在加载联系方式，请稍候。"}}</view>
+    <view wx:if="{{vehicle.maskedPhone}}" class="phone">车主电话：{{vehicle.maskedPhone}}</view>
+    <button class="primary-btn" loading="{{loading}}" disabled="{{!vehicle.phone}}" bindtap="callOwner">呼叫车主</button>
+  </view>
+</view>
