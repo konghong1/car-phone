@@ -6,6 +6,8 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -15,6 +17,8 @@ import java.util.Map;
 
 @Service
 public class QrCodeService {
+    private static final Logger log = LoggerFactory.getLogger(QrCodeService.class);
+
     private final AppProperties properties;
     private final RestClient restClient;
 
@@ -25,7 +29,11 @@ public class QrCodeService {
 
     public byte[] createCodeForVehicle(String vehicleId) {
         if (properties.getWechat().enabled()) {
-            return createWechatMiniProgramCode(vehicleId);
+            try {
+                return createWechatMiniProgramCode(vehicleId);
+            } catch (Exception ex) {
+                log.warn("Create WeChat mini program code failed, fallback to plain QR code. vehicleId={}", vehicleId, ex);
+            }
         }
         return createPlainQrCode(publicMoveCarUrl(vehicleId));
     }

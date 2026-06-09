@@ -1,6 +1,6 @@
 App({
   globalData: {
-    apiBase: "http://localhost:8081",
+    apiBase: "http://127.0.0.1:8081",
     token: ""
   },
   onLaunch() {

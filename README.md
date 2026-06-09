@@ -17,7 +17,7 @@
 mvn -s .mvn/settings.xml spring-boot:run
 ```
 
-默认地址是 `http://localhost:8081`。
+默认地址是 `http://127.0.0.1:8081`。
 
 生产环境建议配置：
 
