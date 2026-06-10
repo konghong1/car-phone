@@ -1,8 +1,29 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/call/index"
+    "pages/profiles/index",
+    "pages/profile-create/index",
+    "pages/stickers/index",
+    "pages/template-library/index",
+    "pages/sticker-detail/index",
+    "pages/call/index",
+    "pages/mine/index"
   ],
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#667eea",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/profiles/index",
+        "text": "车主档案"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的"
+      }
+    ]
+  },
   "window": {
     "navigationBarTitleText": "安心挪车",
     "navigationBarBackgroundColor": "#ffffff",

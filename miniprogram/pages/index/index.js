@@ -4,70 +4,99 @@ Page({
   data: {
     apiBase: app.globalData.apiBase,
     token: "",
-    submitting: false,
-    form: {
-      ownerName: "",
-      plateNo: "",
-      phone: "",
-      comfortMessage: "您好，给您添麻烦了。车主已开启挪车电话，请点击下方按钮联系车主，感谢您的理解。"
-    },
-    vehicle: null
+    vehicleList: [],
+    loading: false
   },
 
   onShow() {
-    this.setData({ token: app.globalData.token || wx.getStorageSync("token") || "" });
+    const token = app.globalData.token || wx.getStorageSync("token") || "";
+    this.setData({ token });
+    if (token) {
+      // 跳转到车主档案页面
+      wx.switchTab({ url: '/pages/profiles/index' });
+    }
   },
 
   login() {
+    this.setData({ loading: true });
     wx.login({
       success: ({ code }) => {
         wx.request({
           url: `${this.data.apiBase}/api/auth/wechat-login`,
           method: "POST",
           data: { code, nickname: "" },
+          header: { "Content-Type": "application/json" },
           success: ({ data }) => {
             app.globalData.token = data.token;
             wx.setStorageSync("token", data.token);
             this.setData({ token: data.token });
+            this.loadVehicleList();
           },
-          fail: () => wx.showToast({ title: "登录失败", icon: "none" })
+          fail: () => wx.showToast({ title: "登录失败", icon: "none" }),
+          complete: () => this.setData({ loading: false })
         });
       },
-      fail: () => wx.showToast({ title: "微信登录失败", icon: "none" })
+      fail: () => {
+        wx.showToast({ title: "微信登录失败", icon: "none" });
+        this.setData({ loading: false });
+      }
     });
   },
 
-  onInput(event) {
-    const field = event.currentTarget.dataset.field;
-    this.setData({ [`form.${field}`]: event.detail.value });
-  },
-
-  createVehicle() {
-    const { ownerName, phone } = this.data.form;
-    if (!ownerName || !/^1[3-9]\d{9}$/.test(phone)) {
-      wx.showToast({ title: "请填写称呼和正确手机号", icon: "none" });
-      return;
-    }
-
-    this.setData({ submitting: true });
+  loadVehicleList() {
     wx.request({
       url: `${this.data.apiBase}/api/vehicles`,
-      method: "POST",
+      method: "GET",
       header: { Authorization: `Bearer ${this.data.token}` },
-      data: this.data.form,
-      success: ({ statusCode, data }) => {
-        if (statusCode >= 400) {
-          wx.showToast({ title: data.message || "生成失败", icon: "none" });
-          return;
-        }
-        this.setData({ vehicle: data });
+      success: ({ data }) => {
+        this.setData({ vehicleList: data || [] });
       },
-      fail: () => wx.showToast({ title: "网络异常", icon: "none" }),
-      complete: () => this.setData({ submitting: false })
+      fail: () => wx.showToast({ title: "加载列表失败", icon: "none" })
     });
   },
 
-  previewCallPage() {
-    wx.navigateTo({ url: `/pages/call/index?id=${this.data.vehicle.id}` });
+  previewVehicle(event) {
+    const id = event.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/call/index?id=${id}` });
+  },
+
+  goToCreate() {
+    wx.showToast({ title: "请先选择车主档案", icon: "none" });
+    setTimeout(() => {
+      wx.switchTab({ url: '/pages/profiles/index' });
+    }, 1500);
+  },
+
+  deleteVehicle(event) {
+    const id = event.currentTarget.dataset.id;
+    wx.showModal({
+      title: "确认删除",
+      content: "确定要删除这条挪车码记录吗？",
+      success: (res) => {
+        if (res.confirm) {
+          wx.request({
+            url: `${this.data.apiBase}/api/vehicles/${id}`,
+            method: "DELETE",
+            header: { Authorization: `Bearer ${this.data.token}` },
+            success: () => {
+              wx.showToast({ title: "删除成功", icon: "success" });
+              this.loadVehicleList();
+            },
+            fail: () => wx.showToast({ title: "删除失败", icon: "none" })
+          });
+        }
+      }
+    });
+  },
+
+  // 获取样式名称
+  getStyleName(styleId) {
+    const styleMap = {
+      'modern': '现代简约',
+      'classic': '经典商务',
+      'cute': '可爱卡通',
+      'minimal': '极简风格'
+    };
+    return styleMap[styleId] || '自定义';
   }
 });

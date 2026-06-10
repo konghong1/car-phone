@@ -1,0 +1,47 @@
+<view class="container">
+  <!-- 分类标签 -->
+  <scroll-view class="category-bar" scroll-x="true">
+    <view 
+      class="category-item {{currentCategory === item ? 'active' : ''}}"
+      wx:for="{{categories}}" 
+      wx:key="*this"
+      bindtap="switchCategory"
+      data-category="{{item}}"
+    >
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <!-- 模板网格 -->
+  <view class="template-grid" wx:if="{{templates.length > 0}}">
+    <view 
+      class="template-card"
+      wx:for="{{templates}}" 
+      wx:key="id"
+      bindtap="selectTemplate"
+      data-template="{{item}}"
+    >
+      <view class="template-preview">
+        <image class="preview-img" src="{{item.previewUrl}}" mode="aspectFill" wx:if="{{item.previewUrl}}"></image>
+        <view class="preview-placeholder" wx:else>
+          <text class="placeholder-text">{{item.name}}</text>
+        </view>
+        <view class="premium-tag" wx:if="{{item.isPremium}}">付费</view>
+      </view>
+      <view class="template-info">
+        <view class="template-name">{{item.name}}</view>
+        <view class="template-category">{{item.category}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && templates.length === 0}}">
+    <text class="empty-text">该分类暂无模板</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

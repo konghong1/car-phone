@@ -1,27 +1,28 @@
 package com.example.carphone.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 public final class VehicleDtos {
     private VehicleDtos() {
     }
 
     public record UpsertVehicleRequest(
-            @NotBlank String ownerName,
-            String plateNo,
-            @NotBlank @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确") String phone,
+            @NotBlank String profileId,  // 车主档案ID（必填）
+            @NotBlank String templateId, // 贴图模板ID（必填）
             String comfortMessage
     ) {
     }
 
     public record VehicleResponse(
             String id,
+            String profileId,
+            String templateId,
             String ownerName,
             String plateNo,
             String phone,
             String maskedPhone,
             String comfortMessage,
+            String finalImageUrl,  // 最终合成的贴图URL
             String qrCodeUrl,
             String publicUrl
     ) {

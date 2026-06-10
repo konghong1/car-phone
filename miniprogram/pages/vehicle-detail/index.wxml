@@ -1,0 +1,51 @@
+<view class="page">
+  <!-- 车辆信息头部 -->
+  <view class="vehicle-header">
+    <view class="back-btn" bindtap="goBack">← 返回</view>
+    <view class="plate-badge">{{plateNo || '未填车牌'}}</view>
+  </view>
+
+  <!-- 卡片列表标题 -->
+  <view class="section-title">挪车贴图 ({{cardList.length}})</view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{cardList.length === 0}}" class="empty-state">
+    <view class="empty-icon">📱</view>
+    <view class="empty-text">还没有创建贴图</view>
+    <view class="empty-desc">点击下方按钮为这辆车创建第一个挪车贴图</view>
+  </view>
+
+  <!-- 卡片列表 -->
+  <scroll-view wx:else class="card-scroll" scroll-y>
+    <view class="card-list">
+      <view wx:for="{{cardList}}" wx:key="id" class="card-item">
+        <!-- 二维码预览 -->
+        <view class="card-qrcode" 
+              style="background: linear-gradient(135deg, {{item.backgroundColor || '#f8f9ff'}} 0%, {{item.themeColor || '#e8eaff'}}20 100%)">
+          <image class="qrcode-img" src="{{apiBase}}/api/vehicles/{{item.id}}/qrcode" mode="aspectFit"></image>
+          <view class="style-tag">{{getStyleName(item.cardStyle)}}</view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="card-actions">
+          <button class="action-btn preview-btn" bindtap="previewCard" data-id="{{item.id}}">
+            <text class="btn-icon">👁️</text>
+            <text>预览</text>
+          </button>
+          <button class="action-btn delete-btn" catchtap="deleteCard" data-id="{{item.id}}">
+            <text class="btn-icon">🗑️</text>
+            <text>删除</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 创建新卡片按钮 -->
+  <view class="create-section">
+    <button class="create-btn" bindtap="createNewCard">
+      <text class="plus-icon">+</text>
+      <text>创建新贴图</text>
+    </button>
+  </view>
+</view>

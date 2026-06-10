@@ -1,0 +1,145 @@
+.container {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding-bottom: 140rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 30rpx;
+  padding-top: 20rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.back-btn {
+  font-size: 30rpx;
+  padding: 10rpx 20rpx 10rpx 0;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+/* 贴图网格 */
+.sticker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 24rpx;
+  gap: 20rpx;
+}
+
+.sticker-card {
+  width: calc(50% - 10rpx);
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s;
+}
+
+.sticker-card:active {
+  transform: scale(0.96);
+}
+
+.sticker-preview {
+  width: 100%;
+  height: 280rpx;
+  background: #f0f2f5;
+  overflow: hidden;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+}
+
+.placeholder-icon {
+  font-size: 80rpx;
+}
+
+.sticker-info {
+  padding: 16rpx 20rpx;
+}
+
+.template-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.plate-no {
+  font-size: 24rpx;
+  color: #667eea;
+  margin-top: 4rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #bbb;
+}
+
+.loading {
+  text-align: center;
+  padding: 60rpx;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 制作按钮 */
+.create-btn {
+  position: fixed;
+  bottom: 40rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 24rpx 60rpx;
+  border-radius: 60rpx;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.create-btn:active {
+  opacity: 0.85;
+  transform: translateX(-50%) scale(0.96);
+}
+
+.plus {
+  font-size: 36rpx;
+}

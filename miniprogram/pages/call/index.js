@@ -48,6 +48,18 @@ Page({
   },
 
   callOwner() {
-    wx.makePhoneCall({ phoneNumber: this.data.vehicle.phone });
+    if (!this.data.vehicle.phone) {
+      wx.showToast({ title: "电话号码无效", icon: "none" });
+      return;
+    }
+    wx.makePhoneCall({ 
+      phoneNumber: this.data.vehicle.phone,
+      success: () => {
+        console.log("呼叫成功");
+      },
+      fail: () => {
+        wx.showToast({ title: "呼叫失败", icon: "none" });
+      }
+    });
   }
 });

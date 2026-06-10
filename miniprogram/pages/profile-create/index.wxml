@@ -1,0 +1,25 @@
+<view class="container">
+  <view class="form-card">
+    <view class="form-title">{{editId ? '编辑档案' : '添加车主档案'}}</view>
+    <view class="form-desc">请填写车主基本信息</view>
+
+    <view class="form-group">
+      <view class="label">昵称 <text class="required">*</text></view>
+      <input class="input" placeholder="如：王先生" value="{{nickname}}" data-field="nickname" bindinput="onInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">车牌号 <text class="optional">（选填）</text></view>
+      <input class="input" placeholder="如：京A88888" value="{{plateNo}}" data-field="plateNo" bindinput="onInput" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">手机号 <text class="required">*</text></view>
+      <input class="input" type="number" maxlength="11" placeholder="11位手机号" value="{{phone}}" data-field="phone" bindinput="onInput" />
+    </view>
+
+    <button class="submit-btn" loading="{{submitting}}" bindtap="submit">
+      {{editId ? '保存修改' : '确认添加'}}
+    </button>
+  </view>
+</view>
