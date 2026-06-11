@@ -3,18 +3,14 @@ const app = getApp();
 Page({
   data: {
     token: "",
-    userInfo: null,
-    stats: {
-      totalVehicles: 0,
-      totalCalls: 0
-    }
+    profileCount: 0,
+    stickerCount: 0
   },
 
   onShow() {
     const token = app.globalData.token || wx.getStorageSync("token") || "";
     this.setData({ token });
     if (token) {
-      this.loadUserInfo();
       this.loadStats();
     }
   },
@@ -31,7 +27,6 @@ Page({
             app.globalData.token = data.token;
             wx.setStorageSync("token", data.token);
             this.setData({ token: data.token });
-            this.loadUserInfo();
             this.loadStats();
             wx.showToast({ title: "登录成功", icon: "success" });
           },
@@ -42,52 +37,48 @@ Page({
     });
   },
 
-  loadUserInfo() {
-    // 这里可以从后端获取用户信息，暂时使用本地存储
-    const userInfo = wx.getStorageSync("userInfo");
-    if (userInfo) {
-      this.setData({ userInfo });
-    }
-  },
-
   loadStats() {
-    // 加载统计数据
-    if (!this.data.token) {
-      return;
-    }
+    if (!this.data.token) return;
     
     wx.request({
-      url: `${app.globalData.apiBase}/api/vehicles`,
+      url: `${app.globalData.apiBase}/api/profiles`,
       method: "GET",
       header: { Authorization: `Bearer ${this.data.token}` },
       success: ({ data, statusCode }) => {
         if (statusCode === 200 && Array.isArray(data)) {
-          this.setData({
-            'stats.totalVehicles': data.length
+          let totalVehicles = 0;
+          data.forEach(p => {
+            if (p.vehicles) totalVehicles += p.vehicles.length;
           });
+          this.setData({ profileCount: data.length, 'stats.totalVehicles': totalVehicles });
         }
-      },
-      fail: (err) => {
-        console.error('加载统计失败:', err);
+      }
+    });
+
+    wx.request({
+      url: `${app.globalData.apiBase}/api/stickers`,
+      method: "GET",
+      header: { Authorization: `Bearer ${this.data.token}` },
+      success: ({ data, statusCode }) => {
+        if (statusCode === 200 && Array.isArray(data)) {
+          this.setData({ 'stats.totalStickers': data.length });
+        }
       }
     });
   },
 
-  goToVehicles() {
+  goToProfiles() {
     wx.switchTab({ url: '/pages/profiles/index' });
   },
 
   goToCreate() {
-    wx.showToast({ title: "请先选择车主档案", icon: "none" });
-    setTimeout(() => {
-      wx.switchTab({ url: '/pages/profiles/index' });
-    }, 1500);
+    wx.navigateTo({ url: '/pages/profile-create/index' });
   },
 
   viewHelp() {
     wx.showModal({
       title: "使用帮助",
-      content: "1. 点击\"新增挪车码\"创建您的挪车二维码\n2. 将二维码打印并贴在车上\n3. 他人扫码后可查看您的联系方式\n4. 可在\"挪车码\"页面管理所有二维码",
+      content: "1. 添加车主档案（支持多车牌）\n2. 选择档案和车牌\n3. 选择模板或上传自定义图片\n4. 制作并保存挪车贴图\n5. 将二维码贴纸贴于车窗",
       showCancel: false
     });
   },
@@ -107,11 +98,7 @@ Page({
         if (res.confirm) {
           app.globalData.token = "";
           wx.removeStorageSync("token");
-          this.setData({ 
-            token: "",
-            userInfo: null,
-            'stats.totalVehicles': 0
-          });
+          this.setData({ token: "" });
           wx.showToast({ title: "已退出", icon: "success" });
         }
       }

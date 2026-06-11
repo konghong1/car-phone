@@ -6,25 +6,32 @@ public final class VehicleDtos {
     private VehicleDtos() {
     }
 
-    public record UpsertVehicleRequest(
-            @NotBlank String profileId,  // 车主档案ID（必填）
-            @NotBlank String templateId, // 贴图模板ID（必填）
-            String comfortMessage
+    public record CreateStickerRequest(
+            @NotBlank String profileId,
+            @NotBlank String vehicleId,
+            @NotBlank String templateId,
+            String customImage,
+            String comfortMessage,
+            java.util.List<java.util.Map<String, Object>> layers
     ) {
     }
 
-    public record VehicleResponse(
+    public record StickerResponse(
             String id,
             String profileId,
+            String vehicleId,
             String templateId,
+            String customImage,
             String ownerName,
             String plateNo,
             String phone,
             String maskedPhone,
             String comfortMessage,
-            String finalImageUrl,  // 最终合成的贴图URL
+            String finalImageUrl,
             String qrCodeUrl,
-            String publicUrl
+            String publicUrl,
+            String profileNickname,
+            String profilePhone
     ) {
     }
 
@@ -35,6 +42,11 @@ public final class VehicleDtos {
             String maskedPhone,
             String phone,
             String comfortMessage
+    ) {
+    }
+
+    public record UploadImageResponse(
+            String url
     ) {
     }
 }

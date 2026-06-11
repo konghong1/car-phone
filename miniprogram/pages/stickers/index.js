@@ -41,7 +41,6 @@ Page({
     });
   },
 
-  // 查看贴图详情
   viewSticker(event) {
     const sticker = event.currentTarget.dataset.sticker;
     wx.navigateTo({
@@ -49,7 +48,6 @@ Page({
     });
   },
 
-  // 制作新贴图 → 跳转贴图库
   createSticker() {
     wx.navigateTo({
       url: `/pages/template-library/index?profileId=${this.data.profileId}`

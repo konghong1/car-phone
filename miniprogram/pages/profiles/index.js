@@ -14,7 +14,6 @@ Page({
     if (token) {
       this.loadProfiles();
     } else {
-      // 未登录，跳转我的页面登录
       wx.switchTab({ url: '/pages/mine/index' });
     }
   },
@@ -38,7 +37,6 @@ Page({
     });
   },
 
-  // 点击档案 → 进入该档案的贴图列表
   selectProfile(event) {
     const profile = event.currentTarget.dataset.profile;
     wx.navigateTo({
@@ -46,15 +44,18 @@ Page({
     });
   },
 
-  // 长按档案 → 编辑/删除
   editProfile(event) {
     const profile = event.currentTarget.dataset.profile;
+    let vehiclesStr = '';
+    if (profile.vehicles && profile.vehicles.length > 0) {
+      vehiclesStr = encodeURIComponent(JSON.stringify(profile.vehicles));
+    }
     wx.showActionSheet({
       itemList: ['编辑信息', '删除档案'],
       success: (res) => {
         if (res.tapIndex === 0) {
           wx.navigateTo({
-            url: `/pages/profile-create/index?editId=${profile.id}&nickname=${encodeURIComponent(profile.nickname)}&plateNo=${encodeURIComponent(profile.plateNo || '')}&phone=${profile.phone}`
+            url: `/pages/profile-create/index?editId=${profile.id}&nickname=${encodeURIComponent(profile.nickname)}&phone=${profile.vehicles && profile.vehicles[0] ? profile.vehicles[0].phone : ''}&vehicles=${vehiclesStr}`
           });
         } else if (res.tapIndex === 1) {
           this.deleteProfile(profile.id);
@@ -63,7 +64,6 @@ Page({
     });
   },
 
-  // 跳转到添加档案页面
   addProfile() {
     wx.navigateTo({ url: '/pages/profile-create/index' });
   },

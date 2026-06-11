@@ -5,11 +5,12 @@ Page({
     apiBase: app.globalData.apiBase,
     token: "",
     profileId: "",
+    profile: null,
+    selectedVehicle: null,
     templates: [],
     categories: ["全部", "商务", "可爱", "简约", "卡通"],
     currentCategory: "全部",
-    loading: false,
-    creating: false
+    loading: false
   },
 
   onLoad(options) {
@@ -24,15 +25,35 @@ Page({
       token,
       profileId: options.profileId || ""
     });
+    this.loadProfile();
     this.loadTemplates();
+  },
+
+  loadProfile() {
+    const token = this.data.token;
+    const apiBase = this.data.apiBase;
+    wx.request({
+      url: apiBase + "/api/profiles",
+      method: "GET",
+      header: { Authorization: "Bearer " + token },
+      success: ({ data }) => {
+        if (Array.isArray(data)) {
+          const profile = data.find(p => p.id === this.data.profileId);
+          this.setData({ profile: profile });
+          if (profile && profile.vehicles && profile.vehicles.length > 0) {
+            this.setData({ selectedVehicle: profile.vehicles[0] });
+          }
+        }
+      }
+    });
   },
 
   loadTemplates() {
     this.setData({ loading: true });
     const category = this.data.currentCategory === "全部" ? "" : this.data.currentCategory;
     const url = category
-      ? `${this.data.apiBase}/api/templates?category=${encodeURIComponent(category)}`
-      : `${this.data.apiBase}/api/templates`;
+      ? this.data.apiBase + "/api/templates?category=" + encodeURIComponent(category)
+      : this.data.apiBase + "/api/templates";
 
     wx.request({
       url,
@@ -47,62 +68,39 @@ Page({
     });
   },
 
-  // 切换分类
   switchCategory(event) {
     const category = event.currentTarget.dataset.category;
     this.setData({ currentCategory: category });
     this.loadTemplates();
   },
 
-  // 选择模板 → 确认制作
+  selectVehicle(event) {
+    const vehicle = event.currentTarget.dataset.vehicle;
+    this.setData({ selectedVehicle: vehicle });
+  },
+
   selectTemplate(event) {
     const template = event.currentTarget.dataset.template;
-    
-    wx.showModal({
-      title: "确认制作",
-      content: `使用「${template.name}」模板制作贴图？`,
-      confirmText: "确认制作",
-      confirmColor: "#667eea",
+    wx.navigateTo({
+      url: "/pages/sticker-editor/index?profileId=" + this.data.profileId + "&templateId=" + template.id + "&templateName=" + encodeURIComponent(template.name)
+    });
+  },
+
+  chooseCustomImage() {
+    const that = this;
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
       success: (res) => {
-        if (res.confirm) {
-          this.createSticker(template);
-        }
+        const tempFilePath = res.tempFiles[0].tempFilePath;
+        wx.navigateTo({
+          url: "/pages/sticker-editor/index?profileId=" + this.data.profileId + "&customImage=" + encodeURIComponent(tempFilePath)
+        });
       }
     });
   },
 
-  // 调用后端创建贴图
-  createSticker(template) {
-    this.setData({ creating: true });
-    wx.showLoading({ title: "制作中..." });
-
-    wx.request({
-      url: `${this.data.apiBase}/api/vehicles`,
-      method: "POST",
-      header: {
-        Authorization: `Bearer ${this.data.token}`,
-        "Content-Type": "application/json"
-      },
-      data: {
-        profileId: this.data.profileId,
-        templateId: template.id
-      },
-      success: ({ data, statusCode }) => {
-        if (statusCode === 200 && data.id) {
-          wx.showToast({ title: "制作成功", icon: "success" });
-          // 跳转到贴图详情
-          wx.redirectTo({
-            url: `/pages/sticker-detail/index?stickerId=${data.id}`
-          });
-        } else {
-          wx.showToast({ title: "制作失败", icon: "none" });
-        }
-      },
-      fail: () => wx.showToast({ title: "网络错误", icon: "none" }),
-      complete: () => {
-        this.setData({ creating: false });
-        wx.hideLoading();
-      }
-    });
+  goBack() {
+    wx.navigateBack();
   }
 });

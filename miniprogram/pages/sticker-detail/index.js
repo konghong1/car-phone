@@ -11,26 +11,31 @@ Page({
 
   onLoad(options) {
     const token = app.globalData.token || wx.getStorageSync("token") || "";
-    this.setData({
-      token,
-      stickerId: options.stickerId || ""
-    });
+    this.setData({ token, stickerId: options.stickerId || "" });
     if (token && this.data.stickerId) {
+      this.loadSticker();
+    } else {
+      this.setData({ loading: false });
+    }
+  },
+
+  onShow() {
+    const token = app.globalData.token || wx.getStorageSync("token") || "";
+    if (token && this.data.stickerId) {
+      this.setData({ token });
       this.loadSticker();
     }
   },
 
   loadSticker() {
     this.setData({ loading: true });
-    // 使用全局车辆列表接口找到该贴图
     wx.request({
-      url: `${this.data.apiBase}/api/vehicles`,
+      url: `${this.data.apiBase}/api/stickers/${this.data.stickerId}`,
       method: "GET",
       header: { Authorization: `Bearer ${this.data.token}` },
       success: ({ data, statusCode }) => {
-        if (statusCode === 200 && Array.isArray(data)) {
-          const sticker = data.find(s => s.id === this.data.stickerId);
-          this.setData({ sticker });
+        if (statusCode === 200 && data) {
+          this.setData({ sticker: data });
         }
       },
       fail: () => wx.showToast({ title: "加载失败", icon: "none" }),
@@ -38,14 +43,12 @@ Page({
     });
   },
 
-  // 下载贴图到相册
   downloadSticker() {
     const url = this.data.sticker.finalImageUrl;
     if (!url) {
       wx.showToast({ title: "贴图不存在", icon: "none" });
       return;
     }
-
     wx.showLoading({ title: "下载中..." });
     wx.downloadFile({
       url,
@@ -59,13 +62,17 @@ Page({
         }
       },
       fail: () => wx.showToast({ title: "下载失败", icon: "none" }),
-      complete: () => wx.hideLoading()
+      complete: () => {
+        wx.hideLoading();
+      }
     });
   },
 
-  // 下载二维码
   downloadQrcode() {
-    const url = `${this.data.apiBase}/api/vehicles/${this.data.stickerId}/qrcode`;
+    const sticker = this.data.sticker;
+    const profileId = sticker ? sticker.profileId : '';
+    const vehicleId = sticker ? sticker.vehicleId : '';
+    const url = `${this.data.apiBase}/api/profiles/${profileId}/vehicles/${vehicleId}/qrcode`;
     wx.showLoading({ title: "下载中..." });
     wx.downloadFile({
       url,
@@ -79,36 +86,40 @@ Page({
         }
       },
       fail: () => wx.showToast({ title: "下载失败", icon: "none" }),
-      complete: () => wx.hideLoading()
+      complete: () => {
+        wx.hideLoading();
+      }
     });
   },
 
-  // 删除贴图
   deleteSticker() {
+    const that = this;
     wx.showModal({
       title: "确认删除",
       content: "删除后不可恢复，确定吗？",
       confirmColor: "#ff4d4f",
       success: (res) => {
         if (res.confirm) {
-          wx.showLoading({ title: "删除中..." });
           wx.request({
-            url: `${this.data.apiBase}/api/vehicles/${this.data.stickerId}`,
+            url: `${this.data.apiBase}/api/stickers/${this.data.stickerId}`,
             method: "DELETE",
             header: { Authorization: `Bearer ${this.data.token}` },
             success: ({ statusCode }) => {
               if (statusCode === 204 || statusCode === 200) {
                 wx.showToast({ title: "已删除", icon: "success" });
-                setTimeout(() => wx.navigateBack(), 1000);
+                setTimeout(() => that.goBack(), 1000);
               } else {
                 wx.showToast({ title: "删除失败", icon: "none" });
               }
             },
-            fail: () => wx.showToast({ title: "网络错误", icon: "none" }),
-            complete: () => wx.hideLoading()
+            fail: () => wx.showToast({ title: "网络错误", icon: "none" })
           });
         }
       }
     });
+  },
+
+  goBack() {
+    wx.navigateBack();
   }
 });

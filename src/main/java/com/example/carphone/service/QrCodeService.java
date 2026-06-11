@@ -27,28 +27,28 @@ public class QrCodeService {
         this.restClient = builder.build();
     }
 
-    public byte[] createCodeForVehicle(String vehicleId) {
+    public byte[] createCodeForVehicle(String stickerId) {
         if (properties.getWechat().enabled()) {
             try {
-                return createWechatMiniProgramCode(vehicleId);
+                return createWechatMiniProgramCode(stickerId);
             } catch (Exception ex) {
-                log.warn("Create WeChat mini program code failed, fallback to plain QR code. vehicleId={}", vehicleId, ex);
+                log.warn("Create WeChat mini program code failed, fallback to plain QR code. stickerId={}", stickerId, ex);
             }
         }
-        return createPlainQrCode(publicMoveCarUrl(vehicleId));
+        return createPlainQrCode(publicMoveCarUrl(stickerId));
     }
 
-    public String publicMoveCarUrl(String vehicleId) {
-        return properties.getPublicBaseUrl().replaceAll("/+$", "") + "/move-car?id=" + vehicleId;
+    public String publicMoveCarUrl(String stickerId) {
+        return properties.getPublicBaseUrl().replaceAll("/+$", "") + "/move-car?id=" + stickerId;
     }
 
-    private byte[] createWechatMiniProgramCode(String vehicleId) {
+    private byte[] createWechatMiniProgramCode(String stickerId) {
         String token = fetchWechatAccessToken();
         return restClient.post()
                 .uri("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token={token}", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Map.of(
-                        "scene", "id=" + vehicleId,
+                        "scene", "id=" + stickerId,
                         "page", "pages/call/index",
                         "check_path", false,
                         "width", 430

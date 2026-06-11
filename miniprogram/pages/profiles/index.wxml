@@ -1,11 +1,9 @@
 <view class="container">
-  <!-- 头部 -->
   <view class="header">
     <view class="title">车主档案</view>
-    <view class="subtitle">选择档案查看贴图，或添加新档案</view>
+    <view class="subtitle">管理您的车辆信息和挪车贴图</view>
   </view>
 
-  <!-- 档案列表 -->
   <view class="profile-list" wx:if="{{profiles.length > 0}}">
     <view 
       class="profile-card" 
@@ -16,32 +14,33 @@
       data-profile="{{item}}"
     >
       <view class="card-main">
-        <view class="info-row">
-          <text class="nickname">{{item.nickname}}</text>
-          <text class="plate-no" wx:if="{{item.plateNo}}">{{item.plateNo}}</text>
+        <view class="profile-header">
+          <view class="nickname">{{item.nickname}}</view>
+          <view class="profile-date">{{formatDate(item.createdAt)}}</view>
         </view>
-        <view class="phone">{{item.phone}}</view>
-      </view>
-      
-      <view class="card-right">
-        <view class="sticker-count">查看贴图 ›</view>
+        <view class="vehicle-list">
+          <view class="vehicle-tag" wx:for="{{item.vehicles}}" wx:for-item="v" wx:key="id">
+            <text class="plate">{{v.plateNo}}</text>
+            <text class="vphone">{{v.phone}}</text>
+          </view>
+        </view>
+        <view class="card-right">
+          <view class="sticker-count">管理贴图 ›</view>
+        </view>
       </view>
     </view>
   </view>
 
-  <!-- 空状态 -->
   <view class="empty-state" wx:if="{{!loading && profiles.length === 0}}">
     <view class="empty-icon">📋</view>
     <view class="empty-text">暂无车主档案</view>
     <view class="empty-hint">点击下方按钮添加您的第一个档案</view>
   </view>
 
-  <!-- 加载状态 -->
   <view class="loading" wx:if="{{loading}}">
     <text>加载中...</text>
   </view>
 
-  <!-- 添加按钮 -->
   <view class="add-button" bindtap="addProfile">
     <text class="plus">+</text>
     <text>添加新档案</text>

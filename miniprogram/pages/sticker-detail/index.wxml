@@ -1,11 +1,14 @@
 <view class="container">
-  <!-- 加载中 -->
   <view class="loading" wx:if="{{loading}}">
     <text>加载中...</text>
   </view>
 
   <block wx:if="{{!loading && sticker}}">
-    <!-- 贴图展示 -->
+    <view class="header">
+      <view class="back-btn" bindtap="goBack">← 返回</view>
+      <view class="title">贴图详情</view>
+    </view>
+
     <view class="sticker-display">
       <image class="sticker-img" src="{{sticker.finalImageUrl}}" mode="aspectFit" wx:if="{{sticker.finalImageUrl}}"></image>
       <view class="sticker-placeholder" wx:else>
@@ -14,7 +17,6 @@
       </view>
     </view>
 
-    <!-- 信息卡片 -->
     <view class="info-card">
       <view class="info-title">贴图信息</view>
       <view class="info-row">
@@ -35,27 +37,24 @@
       </view>
     </view>
 
-    <!-- 二维码 -->
     <view class="qrcode-section">
       <view class="qrcode-title">扫码呼叫二维码</view>
-      <image class="qrcode-img" src="{{apiBase}}/api/vehicles/{{stickerId}}/qrcode" mode="aspectFit"></image>
+      <image class="qrcode-img" src="{{apiBase}}/api/profiles/" + sticker.profileId + "/vehicles/" + sticker.vehicleId + "/qrcode" mode="aspectFit"></image>
     </view>
 
-    <!-- 操作按钮 -->
     <view class="action-bar">
       <button class="action-btn primary" bindtap="downloadSticker">
-        <text>下载贴图</text>
+        <text>📥</text><text>下载贴图</text>
       </button>
       <button class="action-btn secondary" bindtap="downloadQrcode">
-        <text>下载二维码</text>
+        <text>📱</text><text>下载二维码</text>
       </button>
       <button class="action-btn danger" bindtap="deleteSticker">
-        <text>删除贴图</text>
+        <text>🗑️</text><text>删除贴图</text>
       </button>
     </view>
   </block>
 
-  <!-- 不存在 -->
   <view class="empty-state" wx:if="{{!loading && !sticker}}">
     <text class="empty-text">贴图不存在</text>
   </view>

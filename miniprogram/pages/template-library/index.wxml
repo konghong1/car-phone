@@ -1,47 +1,76 @@
 <view class="container">
-  <!-- 分类标签 -->
-  <scroll-view class="category-bar" scroll-x="true">
-    <view 
-      class="category-item {{currentCategory === item ? 'active' : ''}}"
-      wx:for="{{categories}}" 
-      wx:key="*this"
-      bindtap="switchCategory"
-      data-category="{{item}}"
-    >
-      {{item}}
-    </view>
-  </scroll-view>
+  <!-- 头部 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">← 返回</view>
+    <view class="title">选择贴图模板</view>
+  </view>
 
-  <!-- 模板网格 -->
-  <view class="template-grid" wx:if="{{templates.length > 0}}">
-    <view 
-      class="template-card"
-      wx:for="{{templates}}" 
-      wx:key="id"
-      bindtap="selectTemplate"
-      data-template="{{item}}"
-    >
-      <view class="template-preview">
-        <image class="preview-img" src="{{item.previewUrl}}" mode="aspectFill" wx:if="{{item.previewUrl}}"></image>
-        <view class="preview-placeholder" wx:else>
-          <text class="placeholder-text">{{item.name}}</text>
+  <!-- 选择车牌 -->
+  <view class="section" wx:if="{{profile}}">
+    <view class="section-label">选择车辆</view>
+    <view class="vehicle-selector">
+      <view 
+        class="vehicle-option {{selectedVehicle && selectedVehicle.id === item.id ? 'selected' : ''}}"
+        wx:for="{{profile.vehicles}}" 
+        wx:key="id"
+        bindtap="selectVehicle"
+        data-vehicle="{{item}}"
+      >
+        <text class="plate-text">{{item.plateNo}}</text>
+        <text class="phone-text">{{item.phone}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上传图片 -->
+  <view class="section">
+    <view class="section-label">自定义背景</view>
+    <view class="upload-area" bindtap="chooseCustomImage">
+      <text class="upload-icon">📷</text>
+      <text class="upload-text">选择本地图片</text>
+      <text class="upload-hint">支持jpg/png，将作为贴图背景</text>
+    </view>
+  </view>
+
+  <!-- 预设模板 -->
+  <view class="section">
+    <view class="section-label">选择预设模板</view>
+    
+    <scroll-view class="category-bar" scroll-x="true">
+      <view 
+        class="category-item {{currentCategory === item ? 'active' : ''}}"
+        wx:for="{{categories}}" 
+        wx:key="*this"
+        bindtap="switchCategory"
+        data-category="{{item}}"
+      >
+        {{item}}
+      </view>
+    </scroll-view>
+
+    <view class="template-grid" wx:if="{{templates.length > 0}}">
+      <view 
+        class="template-card {{selectedTemplate && selectedTemplate.id === item.id ? 'selected' : ''}}"
+        wx:for="{{templates}}" 
+        wx:key="id"
+        bindtap="selectTemplate"
+        data-template="{{item}}"
+      >
+        <view class="template-preview">
+          <image class="preview-img" src="{{item.previewUrl}}" mode="aspectFill" wx:if="{{item.previewUrl}}"></image>
+          <view class="preview-placeholder" wx:else>
+            <text class="placeholder-text">{{item.name}}</text>
+          </view>
         </view>
-        <view class="premium-tag" wx:if="{{item.isPremium}}">付费</view>
-      </view>
-      <view class="template-info">
         <view class="template-name">{{item.name}}</view>
-        <view class="template-category">{{item.category}}</view>
       </view>
     </view>
-  </view>
 
-  <!-- 空状态 -->
-  <view class="empty-state" wx:if="{{!loading && templates.length === 0}}">
-    <text class="empty-text">该分类暂无模板</text>
-  </view>
-
-  <!-- 加载中 -->
-  <view class="loading" wx:if="{{loading}}">
-    <text>加载中...</text>
+    <view class="empty-hint" wx:if="{{!loading && templates.length === 0}}">
+      <text>该分类暂无模板</text>
+    </view>
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
   </view>
 </view>

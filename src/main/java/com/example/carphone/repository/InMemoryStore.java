@@ -1,7 +1,7 @@
 package com.example.carphone.repository;
 
 import com.example.carphone.model.OwnerProfile;
-import com.example.carphone.model.VehicleCard;
+import com.example.carphone.model.StickerCard;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,11 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Repository
 public class InMemoryStore {
     private final ConcurrentHashMap<String, OwnerProfile> ownerProfiles = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, VehicleCard> vehicleCards = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, StickerCard> stickerCards = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> tokenToOpenid = new ConcurrentHashMap<>();
 
-    // ========== OwnerProfile 操作 ==========
-    
+    // ==================== OwnerProfile 操作 ====================
+
     public Optional<OwnerProfile> findProfile(String id) {
         return Optional.ofNullable(ownerProfiles.get(id));
     }
@@ -34,12 +34,12 @@ public class InMemoryStore {
 
     public void deleteProfile(String id) {
         ownerProfiles.remove(id);
-        // 同时删除该档案创建的所有卡片
-        vehicleCards.values().removeIf(card -> card.profileId().equals(id));
+        // 级联删除该档案创建的所有贴图
+        stickerCards.values().removeIf(card -> card.profileId().equals(id));
     }
 
-    // ========== Token 操作 ==========
-    
+    // ==================== Token 操作 ====================
+
     public void saveToken(String token, String openid) {
         tokenToOpenid.put(token, openid);
     }
@@ -48,38 +48,37 @@ public class InMemoryStore {
         return Optional.ofNullable(tokenToOpenid.get(token));
     }
 
-    // ========== VehicleCard 操作 ==========
-    
-    public VehicleCard saveVehicleCard(VehicleCard card) {
-        vehicleCards.put(card.id(), card);
+    // ==================== StickerCard 操作 ====================
+
+    public StickerCard saveStickerCard(StickerCard card) {
+        stickerCards.put(card.id(), card);
         return card;
     }
 
-    public Optional<VehicleCard> findVehicleCard(String id) {
-        return Optional.ofNullable(vehicleCards.get(id));
+    public Optional<StickerCard> findStickerCard(String id) {
+        return Optional.ofNullable(stickerCards.get(id));
     }
 
-    public List<VehicleCard> findCardsByProfile(String profileId) {
-        return vehicleCards.values().stream()
+    public List<StickerCard> findStickersByProfile(String profileId) {
+        return stickerCards.values().stream()
                 .filter(card -> card.profileId().equals(profileId))
                 .sorted((left, right) -> right.createdAt().compareTo(left.createdAt()))
                 .toList();
     }
 
-    public List<VehicleCard> findCardsByOpenid(String openid) {
-        // 先找到该openid的所有profile
+    public List<StickerCard> findStickersByOpenid(String openid) {
         List<String> profileIds = ownerProfiles.values().stream()
                 .filter(p -> p.openid().equals(openid))
                 .map(OwnerProfile::id)
                 .toList();
-        
-        return vehicleCards.values().stream()
+
+        return stickerCards.values().stream()
                 .filter(card -> profileIds.contains(card.profileId()))
                 .sorted((left, right) -> right.createdAt().compareTo(left.createdAt()))
                 .toList();
     }
 
-    public void deleteVehicleCard(String id) {
-        vehicleCards.remove(id);
+    public void deleteStickerCard(String id) {
+        stickerCards.remove(id);
     }
 }

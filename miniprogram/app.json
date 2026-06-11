@@ -3,8 +3,9 @@
     "pages/profiles/index",
     "pages/profile-create/index",
     "pages/stickers/index",
-    "pages/template-library/index",
     "pages/sticker-detail/index",
+    "pages/template-library/index",
+    "pages/sticker-editor/index",
     "pages/call/index",
     "pages/mine/index"
   ],
@@ -26,8 +27,8 @@
   },
   "window": {
     "navigationBarTitleText": "安心挪车",
-    "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#667eea",
+    "navigationBarTextStyle": "white",
     "backgroundColor": "#f5f7fb"
   },
   "style": "v2",
