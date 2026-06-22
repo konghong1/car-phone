@@ -1,0 +1,48 @@
+<view class="container">
+  <view class="header">
+    <view class="title">车主档案</view>
+    <view class="subtitle">管理您的车辆信息和挪车贴图</view>
+  </view>
+
+  <view class="profile-list" wx:if="{{profiles.length > 0}}">
+    <view 
+      class="profile-card" 
+      wx:for="{{profiles}}" 
+      wx:key="id"
+      bindtap="selectProfile"
+      bindlongpress="editProfile"
+      data-profile="{{item}}"
+    >
+      <view class="card-main">
+        <view class="profile-header">
+          <view class="nickname">{{item.nickname}}</view>
+          <view class="profile-date">{{formatDate(item.createdAt)}}</view>
+        </view>
+        <view class="vehicle-list">
+          <view class="vehicle-tag" wx:for="{{item.vehicles}}" wx:for-item="v" wx:key="id">
+            <text class="plate">{{v.plateNo}}</text>
+            <text class="vphone">{{v.phone}}</text>
+          </view>
+        </view>
+        <view class="card-right">
+          <view class="sticker-count">管理贴图 ›</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{!loading && profiles.length === 0}}">
+    <view class="empty-icon">📋</view>
+    <view class="empty-text">暂无车主档案</view>
+    <view class="empty-hint">点击下方按钮添加您的第一个档案</view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <view class="add-button" bindtap="addProfile">
+    <text class="plus">+</text>
+    <text>添加新档案</text>
+  </view>
+</view>

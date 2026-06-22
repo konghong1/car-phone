@@ -1,0 +1,245 @@
+<view class="editor-container">
+  <!-- 顶部工具栏 -->
+  <view class="toolbar">
+    <view class="toolbar-left" bindtap="goBack">
+      <text class="back-icon">‹</text>
+      <text class="cancel-text">返回</text>
+    </view>
+    <view class="toolbar-center">
+      <text class="editor-title">制作挪车贴</text>
+    </view>
+    <view class="toolbar-right">
+      <text class="save-draft" bindtap="saveDraft">💾 保存</text>
+      <text class="create-btn-text" bindtap="confirmCreate">✨ 制作</text>
+    </view>
+  </view>
+
+  <!-- 画布区域 -->
+  <view class="canvas-area">
+    <canvas 
+      canvas-id="stickerCanvas" 
+      id="stickerCanvas"
+      class="sticker-canvas"
+      style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"
+      bindtap="handleCanvasTap"
+    ></canvas>
+    
+    <!-- 选中元素控制框 -->
+    <view 
+      wx:if="{{selectedLayerIndex >= 0 && layers.length > 0}}"
+      class="layer-controls"
+      style="left: {{controlLeft}}px; top: {{controlTop}}px; width: {{controlWidth}}px; height: {{controlHeight}}px;"
+    >
+      <view class="control-border"></view>
+      <view class="resize-handle" data-action="resize" data-index="{{selectedLayerIndex}}" bindtouchstart="onHandleStart" bindtouchmove="onHandleMove" bindtouchend="onHandleEnd"></view>
+      <view class="rotate-handle" data-action="rotate" data-index="{{selectedLayerIndex}}" bindtouchstart="onRotateStart" bindtouchmove="onRotateMove" bindtouchend="onRotateEnd"></view>
+    </view>
+  </view>
+
+  <!-- 底部面板 -->
+  <view class="bottom-panel">
+    <!-- 工具栏 -->
+    <scroll-view class="tool-row" scroll-x="true">
+      <view class="tool-item {{activeTool === 'template' ? 'active' : ''}}" bindtap="openTemplateModal">
+        <text class="tool-icon">📋</text>
+        <text class="tool-label">模板</text>
+      </view>
+      <view class="tool-item {{activeTool === 'quickTemplate' ? 'active' : ''}}" bindtap="openQuickTemplateModal">
+        <text class="tool-icon">🎨</text>
+        <text class="tool-label">快捷模板</text>
+      </view>
+      <view class="tool-item {{activeTool === 'text' ? 'active' : ''}}" bindtap="selectTool" data-tool="text">
+        <text class="tool-icon">T</text>
+        <text class="tool-label">文字</text>
+      </view>
+      <view class="tool-item {{activeTool === 'image' ? 'active' : ''}}" bindtap="selectTool" data-tool="image">
+        <text class="tool-icon">🖼</text>
+        <text class="tool-label">图片</text>
+      </view>
+      <view class="tool-item {{activeTool === 'shape' ? 'active' : ''}}" bindtap="selectTool" data-tool="shape">
+        <text class="tool-icon">⬜</text>
+        <text class="tool-label">形状</text>
+      </view>
+      <view class="tool-item {{activeTool === 'comfort' ? 'active' : ''}}" bindtap="selectTool" data-tool="comfort">
+        <text class="tool-icon">💬</text>
+        <text class="tool-label">问候语</text>
+      </view>
+      <view class="tool-item {{activeTool === 'erase' ? 'active' : ''}}" bindtap="selectTool" data-tool="erase">
+        <text class="tool-icon">🗑</text>
+        <text class="tool-label">删除</text>
+      </view>
+    </scroll-view>
+
+    <!-- 选中元素操作 -->
+    <view class="quick-actions" wx:if="{{selectedLayerIndex >= 0}}">
+      <view class="delete-btn" bindtap="deleteSelectedLayer">
+        <text>删除此元素</text>
+      </view>
+    </view>
+
+    <!-- 问候语 -->
+    <view class="option-row" wx:if="{{activeTool === 'comfort'}}">
+      <view class="comfort-group">
+        <textarea 
+          class="comfort-input" 
+          placeholder="输入问候语（可选），如：您好，给您添麻烦了..."
+          value="{{comfortMessage}}"
+          bindinput="onComfortInput"
+          maxlength="100"
+          auto-height
+        />
+      </view>
+    </view>
+
+    <!-- 文字工具 -->
+    <view class="option-row" wx:if="{{activeTool === 'text'}}">
+      <view class="option-group">
+        <text class="option-label">字号</text>
+        <slider min="16" max="60" value="{{textSize}}" bindchange="onTextSizeChange" show-value activeColor="#667eea" />
+      </view>
+      <view class="option-group">
+        <text class="option-label">颜色</text>
+        <view class="color-picker">
+          <view class="color-swatch {{textColor === c ? 'selected' : ''}}" wx:for="{{textColors}}" wx:key="*this" data-color="{{item}}" bindtap="selectTextColor" style="background: {{item}}" />
+        </view>
+      </view>
+      <view class="option-group">
+        <input class="text-input" placeholder="输入文字..." value="{{textInputValue}}" bindinput="onTextInput" bindconfirm="addTextLayer" />
+        <view class="add-text-btn" bindtap="addTextLayer">添加</view>
+      </view>
+    </view>
+
+    <!-- 形状工具 -->
+    <view class="option-row" wx:if="{{activeTool === 'shape'}}">
+      <view class="shape-options">
+        <view class="shape-btn {{selectedShape === 'rect' ? 'active' : ''}}" bindtap="selectShape" data-shape="rect"><text>矩形</text></view>
+        <view class="shape-btn {{selectedShape === 'circle' ? 'active' : ''}}" bindtap="selectShape" data-shape="circle"><text>圆形</text></view>
+        <view class="shape-btn {{selectedShape === 'line' ? 'active' : ''}}" bindtap="selectShape" data-shape="line"><text>直线</text></view>
+      </view>
+      <view class="option-group">
+        <text class="option-label">颜色</text>
+        <view class="color-picker">
+          <view class="color-swatch {{shapeColor === c ? 'selected' : ''}}" wx:for="{{shapeColors}}" wx:key="*this" data-color="{{item}}" bindtap="selectShapeColor" style="background: {{item}}" />
+        </view>
+      </view>
+      <view class="add-shape-btn" bindtap="addShapeLayer">添加</view>
+    </view>
+  </view>
+
+  <!-- 模板弹窗 -->
+  <view class="modal-overlay" wx:if="{{showTemplateModal}}" bindtap="closeTemplateModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">选择模板</text>
+        <view class="modal-close" bindtap="closeTemplateModal">×</view>
+      </view>
+      <scroll-view class="template-list" scroll-y="true">
+        <view class="template-item {{selectedTemplateId === item.id ? 'selected' : ''}}" wx:for="{{templates}}" wx:key="id" bindtap="selectTemplateFromModal" data-template="{{item}}">
+          <image class="template-thumb" src="{{item.previewUrl}}" mode="aspectFill" wx:if="{{item.previewUrl}}" />
+          <view class="preview-placeholder-thumb" wx:else>
+            <text>{{item.name}}</text>
+          </view>
+          <text class="template-name">{{item.name}}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 快捷模板弹窗（纯背景色 + emoji装饰） -->
+  <view class="modal-overlay" wx:if="{{showQuickTemplateModal}}" bindtap="closeQuickTemplateModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">快捷模板</text>
+        <view class="modal-close" bindtap="closeQuickTemplateModal">×</view>
+      </view>
+      <view class="quick-template-grid">
+        <!-- 纯色背景模板 -->
+        <view class="quick-tpl-section">
+          <text class="section-title">纯色背景</text>
+          <view class="bg-grid">
+            <view class="bg-option {{selectedBgId === 'blue' ? 'active' : ''}}" bindtap="applyBgTemplate" data-bgId="blue" data-color="#667eea">
+              <view class="bg-preview" style="background: #667eea"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'pink' ? 'active' : ''}}" bindtap="applyBgTemplate" data-bgId="pink" data-color="#f093fb">
+              <view class="bg-preview" style="background: #f093fb"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'green' ? 'active' : ''}}" bindtap="applyBgTemplate" data-bgId="green" data-color="#43e97b">
+              <view class="bg-preview" style="background: #43e97b"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'orange' ? 'active' : ''}}" bindtap="applyBgTemplate" data-bgId="orange" data-color="#fa709a">
+              <view class="bg-preview" style="background: #fa709a"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'dark' ? 'active' : ''}}" bindtap="applyBgTemplate" data-bgId="dark" data-color="#1a1a2e">
+              <view class="bg-preview" style="background: #1a1a2e"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'white' ? 'active' : ''}}" bindtap="applyBgTemplate" data-bgId="white" data-color="#ffffff">
+              <view class="bg-preview" style="background: #ffffff; border: 1px solid #ddd;"></view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 渐变背景模板 -->
+        <view class="quick-tpl-section">
+          <text class="section-title">渐变背景</text>
+          <view class="bg-grid">
+            <view class="bg-option {{selectedBgId === 'purple-pink' ? 'active' : ''}}" bindtap="applyGradientBg" data-bgId="purple-pink" data-from="#667eea" data-to="#764ba2">
+              <view class="bg-preview gradient" style="background: linear-gradient(135deg, #667eea, #764ba2)"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'blue-green' ? 'active' : ''}}" bindtap="applyGradientBg" data-bgId="blue-green" data-from="#4facfe" data-to="#00f2fe">
+              <view class="bg-preview gradient" style="background: linear-gradient(135deg, #4facfe, #00f2fe)"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'sunset' ? 'active' : ''}}" bindtap="applyGradientBg" data-bgId="sunset" data-from="#fa709a" data-to="#fee140">
+              <view class="bg-preview gradient" style="background: linear-gradient(135deg, #fa709a, #fee140)"></view>
+            </view>
+            <view class="bg-option {{selectedBgId === 'nature' ? 'active' : ''}}" bindtap="applyGradientBg" data-bgId="nature" data-from="#43e97b" data-to="#38f9d7">
+              <view class="bg-preview gradient" style="background: linear-gradient(135deg, #43e97b, #38f9d7)"></view>
+            </view>
+          </view>
+        </view>
+
+        <!-- emoji装饰模板 -->
+        <view class="quick-tpl-section">
+          <text class="section-title">装饰贴纸</text>
+          <view class="emoji-grid">
+            <view class="emoji-option" wx:for="{{emojis}}" wx:key="*this" bindtap="addEmojiLayer" data-emoji="{{item}}">
+              <text class="emoji-icon">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载提示 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">{{loadingText}}</text>
+  </view>
+
+  <!-- 确认弹窗 -->
+  <view class="modal-overlay" wx:if="{{showConfirmModal}}" bindtap="closeConfirm">
+    <view class="modal-content confirm-modal" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">确认制作</text>
+        <view class="modal-close" bindtap="closeConfirm">×</view>
+      </view>
+      <view class="confirm-body">
+        <view class="confirm-tip">
+          <text>📌 点击确认后，系统将生成包含二维码的最终挪车贴</text>
+        </view>
+        <view class="confirm-vehicle" wx:if="{{vehicle}}">
+          <text class="vehicle-plate">{{vehicle.plateNo}}</text>
+          <text class="vehicle-phone">{{vehicle.phone}}</text>
+        </view>
+        <view class="confirm-comfort" wx:if="{{comfortMessage}}">
+          <text class="comfort-label">问候语：</text>
+          <text>{{comfortMessage}}</text>
+        </view>
+      </view>
+      <view class="confirm-actions">
+        <view class="btn-cancel" bindtap="closeConfirm">取消</view>
+        <view class="btn-confirm" bindtap="doCreate">确认制作</view>
+      </view>
+    </view>
+  </view>
+</view>

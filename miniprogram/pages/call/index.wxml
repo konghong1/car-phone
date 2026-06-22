@@ -1,9 +1,49 @@
 <view class="page call-page">
-  <view class="panel">
-    <view class="title">联系车主挪车</view>
-    <view class="plate">{{vehicle.plateNo || "临时挪车联系"}}</view>
-    <view class="message">{{vehicle.comfortMessage || "正在加载联系方式，请稍候。"}}</view>
-    <view wx:if="{{vehicle.maskedPhone}}" class="phone">车主电话：{{vehicle.maskedPhone}}</view>
-    <button class="primary-btn" loading="{{loading}}" disabled="{{!vehicle.phone}}" bindtap="callOwner">呼叫车主</button>
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 车主信息 -->
+  <view wx:else class="call-container">
+    <view class="call-card">
+      <!-- 车牌号 -->
+      <view class="plate-section">
+        <view class="plate-label">需要挪车的车辆</view>
+        <view class="plate-number">{{vehicle.plateNo || '临时挪车'}}</view>
+      </view>
+
+      <!-- 安慰语 -->
+      <view class="message-box">
+        <view class="quote-icon">“</view>
+        <view class="message-text">{{vehicle.comfortMessage || '您好，给您添麻烦了。请点击下方按钮联系车主。'}}</view>
+        <view class="quote-icon end">”</view>
+      </view>
+
+      <!-- 车主信息 -->
+      <view class="owner-info">
+        <view class="info-item">
+          <text class="info-label">车主</text>
+          <text class="info-value">{{vehicle.ownerName || '未填写'}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">电话</text>
+          <text class="info-value phone-number">{{vehicle.maskedPhone || '未公开'}}</text>
+        </view>
+      </view>
+
+      <!-- 呼叫按钮 -->
+      <button class="call-btn" disabled="{{!vehicle.phone}}" bindtap="callOwner">
+        <text class="call-icon">📞</text>
+        <text class="call-text">一键呼叫车主</text>
+      </button>
+
+      <!-- 温馨提示 -->
+      <view class="tip-box">
+        <text class="tip-icon">💡</text>
+        <text class="tip-text">请确认需要挪车后再拨打，感谢您的理解与配合</text>
+      </view>
+    </view>
   </view>
 </view>

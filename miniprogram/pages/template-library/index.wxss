@@ -1,0 +1,336 @@
+.container {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding-bottom: 40rpx;
+}
+
+.header, .preview-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24rpx 32rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.back-btn {
+  font-size: 28rpx;
+  padding: 10rpx 20rpx 10rpx 0;
+}
+
+.title {
+  font-size: 34rpx;
+  font-weight: bold;
+}
+
+/* 通用区域 */
+.section {
+  background: #fff;
+  margin: 20rpx 24rpx;
+  border-radius: 20rpx;
+  padding: 28rpx 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.section-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+/* 车牌选择 */
+.vehicle-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.vehicle-option {
+  background: #f5f7fb;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  flex: 1;
+  min-width: 200rpx;
+}
+
+.vehicle-option.selected {
+  background: rgba(102, 126, 234, 0.08);
+  border-color: #667eea;
+}
+
+.plate-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.phone-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 自定义图片 */
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9ff;
+  border: 2rpx dashed #667eea;
+  border-radius: 16rpx;
+  padding: 48rpx 24rpx;
+}
+
+.upload-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.upload-text {
+  font-size: 28rpx;
+  color: #667eea;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.upload-hint {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.custom-image-preview {
+  position: relative;
+  width: 100%;
+  height: 300rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.uploaded-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+/* 模板网格 */
+.category-bar {
+  display: flex;
+  white-space: nowrap;
+  background: #f5f7fb;
+  padding: 12rpx 16rpx;
+  margin: 0 -24rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+.category-item {
+  display: inline-block;
+  padding: 10rpx 28rpx;
+  margin-right: 12rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.category-item.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-weight: 600;
+}
+
+.template-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.template-card {
+  width: calc(50% - 8rpx);
+  background: #f8f9ff;
+  border: 2rpx solid transparent;
+  border-radius: 16rpx;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.template-card.selected {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.template-preview {
+  width: 100%;
+  height: 200rpx;
+  background: #e8ecf3;
+  overflow: hidden;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+}
+
+.preview-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.placeholder-text {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.template-name {
+  padding: 12rpx 16rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* 问候语 */
+.comfort-input {
+  width: 100%;
+  min-height: 160rpx;
+  background: #f5f7fb;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  font-size: 26rpx;
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+}
+
+.comfort-input:focus {
+  border-color: #667eea;
+}
+
+/* 预览按钮 */
+.preview-btn-area {
+  padding: 0 24rpx;
+  margin-top: 12rpx;
+}
+
+.preview-btn {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 24rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.35);
+}
+
+.preview-btn:disabled {
+  background: #d1d5db;
+  box-shadow: none;
+}
+
+/* 预览页 */
+.preview-container {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding-bottom: 40rpx;
+}
+
+.preview-card {
+  margin: 20rpx 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.preview-image {
+  width: 100%;
+  height: 400rpx;
+  background: #f8f9ff;
+}
+
+.preview-info {
+  padding: 24rpx;
+}
+
+.preview-plate {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #667eea;
+  margin-bottom: 12rpx;
+}
+
+.preview-owner {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.preview-phone {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+}
+
+.preview-msg {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+  margin-bottom: 12rpx;
+  background: #f8f9ff;
+  padding: 16rpx;
+  border-radius: 12rpx;
+}
+
+.preview-type {
+  font-size: 22rpx;
+  color: #bbb;
+}
+
+.confirm-btn {
+  margin: 24rpx 24rpx 0;
+  height: 96rpx;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+  border: none;
+  border-radius: 24rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 24rpx rgba(16, 185, 129, 0.35);
+}
+
+.confirm-btn:disabled {
+  background: #d1d5db;
+}
+
+.empty-hint, .loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+  font-size: 26rpx;
+}

@@ -1,29 +1,37 @@
 package com.example.carphone.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 public final class VehicleDtos {
     private VehicleDtos() {
     }
 
-    public record UpsertVehicleRequest(
-            @NotBlank String ownerName,
-            String plateNo,
-            @NotBlank @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确") String phone,
-            String comfortMessage
+    public record CreateStickerRequest(
+            @NotBlank String profileId,
+            @NotBlank String vehicleId,
+            @NotBlank String templateId,
+            String customImage,
+            String comfortMessage,
+            java.util.List<java.util.Map<String, Object>> layers
     ) {
     }
 
-    public record VehicleResponse(
+    public record StickerResponse(
             String id,
+            String profileId,
+            String vehicleId,
+            String templateId,
+            String customImage,
             String ownerName,
             String plateNo,
             String phone,
             String maskedPhone,
             String comfortMessage,
+            String finalImageUrl,
             String qrCodeUrl,
-            String publicUrl
+            String publicUrl,
+            String profileNickname,
+            String profilePhone
     ) {
     }
 
@@ -34,6 +42,11 @@ public final class VehicleDtos {
             String maskedPhone,
             String phone,
             String comfortMessage
+    ) {
+    }
+
+    public record UploadImageResponse(
+            String url
     ) {
     }
 }

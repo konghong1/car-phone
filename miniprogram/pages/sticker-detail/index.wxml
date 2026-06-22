@@ -1,0 +1,61 @@
+<view class="container">
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <block wx:if="{{!loading && sticker}}">
+    <view class="header">
+      <view class="back-btn" bindtap="goBack">← 返回</view>
+      <view class="title">贴图详情</view>
+    </view>
+
+    <view class="sticker-display">
+      <image class="sticker-img" src="{{sticker.finalImageUrl}}" mode="aspectFit" wx:if="{{sticker.finalImageUrl}}"></image>
+      <view class="sticker-placeholder" wx:else>
+        <text class="placeholder-icon">🎨</text>
+        <text class="placeholder-text">贴图预览</text>
+      </view>
+    </view>
+
+    <view class="info-card">
+      <view class="info-title">贴图信息</view>
+      <view class="info-row">
+        <text class="label">车主</text>
+        <text class="value">{{sticker.ownerName}}</text>
+      </view>
+      <view class="info-row" wx:if="{{sticker.plateNo}}">
+        <text class="label">车牌</text>
+        <text class="value plate">{{sticker.plateNo}}</text>
+      </view>
+      <view class="info-row">
+        <text class="label">电话</text>
+        <text class="value">{{sticker.maskedPhone}}</text>
+      </view>
+      <view class="info-row" wx:if="{{sticker.comfortMessage}}">
+        <text class="label">问候语</text>
+        <text class="value msg">{{sticker.comfortMessage}}</text>
+      </view>
+    </view>
+
+    <view class="qrcode-section">
+      <view class="qrcode-title">扫码呼叫二维码</view>
+      <image class="qrcode-img" src="{{apiBase}}/api/profiles/" + sticker.profileId + "/vehicles/" + sticker.vehicleId + "/qrcode" mode="aspectFit"></image>
+    </view>
+
+    <view class="action-bar">
+      <button class="action-btn primary" bindtap="downloadSticker">
+        <text>📥</text><text>下载贴图</text>
+      </button>
+      <button class="action-btn secondary" bindtap="downloadQrcode">
+        <text>📱</text><text>下载二维码</text>
+      </button>
+      <button class="action-btn danger" bindtap="deleteSticker">
+        <text>🗑️</text><text>删除贴图</text>
+      </button>
+    </view>
+  </block>
+
+  <view class="empty-state" wx:if="{{!loading && !sticker}}">
+    <text class="empty-text">贴图不存在</text>
+  </view>
+</view>

@@ -1,7 +1,6 @@
 package com.example.carphone.controller;
 
 import com.example.carphone.service.AuthService;
-import com.example.carphone.service.VehicleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,12 +19,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthService.UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Map<String, String> unauthorized(RuntimeException ex) {
-        return Map.of("message", ex.getMessage());
-    }
-
-    @ExceptionHandler(VehicleService.NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> notFound(RuntimeException ex) {
         return Map.of("message", ex.getMessage());
     }
 

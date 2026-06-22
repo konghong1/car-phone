@@ -1,0 +1,79 @@
+<view class="page">
+  <view wx:if="{{!token}}" class="login-container">
+    <view class="login-card">
+      <view class="avatar-placeholder">🚗</view>
+      <view class="welcome-text">安心挪车</view>
+      <view class="muted">创建专属挪车二维码，保护隐私又便捷</view>
+      <button class="login-btn" bindtap="login">微信一键登录</button>
+    </view>
+  </view>
+
+  <view wx:else class="mine-container">
+    <view class="user-card">
+      <view class="user-info">
+        <view class="avatar">👤</view>
+        <view class="user-details">
+          <view class="nickname">微信用户</view>
+          <view class="user-id">安心挪车会员</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="stats-card">
+      <view class="stat-item">
+        <view class="stat-value">{{profileCount}}</view>
+        <view class="stat-label">车主档案</view>
+      </view>
+      <view class="divider"></view>
+      <view class="stat-item">
+        <view class="stat-value">{{stats.totalVehicles}}</view>
+        <view class="stat-label">车辆总数</view>
+      </view>
+      <view class="divider"></view>
+      <view class="stat-item">
+        <view class="stat-value">{{stats.totalStickers}}</view>
+        <view class="stat-label">挪车贴图</view>
+      </view>
+    </view>
+
+    <view class="menu-section">
+      <view class="section-title">快捷操作</view>
+      <view class="menu-list">
+        <view class="menu-item" bindtap="goToProfiles">
+          <view class="menu-icon">📋</view>
+          <view class="menu-text">车主档案</view>
+          <view class="menu-arrow">›</view>
+        </view>
+        <view class="menu-item" bindtap="goToCreate">
+          <view class="menu-icon">➕</view>
+          <view class="menu-text">新建档案</view>
+          <view class="menu-arrow">›</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-section">
+      <view class="section-title">帮助与支持</view>
+      <view class="menu-list">
+        <view class="menu-item" bindtap="viewHelp">
+          <view class="menu-icon">❓</view>
+          <view class="menu-text">使用帮助</view>
+          <view class="menu-arrow">›</view>
+        </view>
+        <view class="menu-item" bindtap="contactSupport">
+          <view class="menu-icon">📞</view>
+          <view class="menu-text">联系客服</view>
+          <view class="menu-arrow">›</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="logout-section">
+      <button class="logout-btn" bindtap="logout">退出登录</button>
+    </view>
+
+    <view class="version-info">
+      <text class="muted">安心挪车 v2.0.0</text>
+    </view>
+  </view>
+</view>

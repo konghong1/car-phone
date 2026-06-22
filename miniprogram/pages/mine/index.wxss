@@ -1,0 +1,205 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
+}
+
+.muted {
+  color: #9ca3af;
+  font-size: 24rpx;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  border-radius: 32rpx;
+  padding: 80rpx 48rpx;
+  text-align: center;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+}
+
+.avatar-placeholder {
+  width: 160rpx;
+  height: 160rpx;
+  margin: 0 auto 32rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80rpx;
+}
+
+.welcome-text {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 16rpx;
+}
+
+.login-btn {
+  margin-top: 56rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 24rpx;
+  padding: 28rpx 0;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.35);
+}
+
+.mine-container {
+  padding-bottom: 40rpx;
+}
+
+.user-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 60rpx 40rpx 48rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64rpx;
+  margin-right: 32rpx;
+  border: 3rpx solid rgba(255, 255, 255, 0.4);
+}
+
+.user-details { flex: 1; }
+
+.nickname {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #fff;
+}
+
+.user-id {
+  font-size: 24rpx;
+  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.stats-card {
+  margin: 32rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #667eea;
+  margin-bottom: 8rpx;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.divider {
+  width: 2rpx;
+  height: 80rpx;
+  background: #e5e7eb;
+}
+
+.menu-section {
+  margin: 0 32rpx 32rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin-bottom: 16rpx;
+  padding-left: 12rpx;
+  font-weight: 600;
+}
+
+.menu-list {
+  background: #fff;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 28rpx;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.menu-item:last-child { border-bottom: none; }
+
+.menu-icon {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin-right: 24rpx;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 16rpx;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.menu-arrow {
+  font-size: 48rpx;
+  color: #d1d5db;
+  font-weight: 300;
+}
+
+.logout-section { margin: 48rpx 32rpx 32rpx; }
+
+.logout-btn {
+  background: #fff;
+  color: #ef4444;
+  border: 2rpx solid #fecaca;
+  border-radius: 24rpx;
+  padding: 26rpx 0;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.version-info {
+  text-align: center;
+  padding: 32rpx;
+}

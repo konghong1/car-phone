@@ -3,12 +3,10 @@ package com.example.carphone.service;
 import com.example.carphone.config.AppProperties;
 import com.example.carphone.dto.AuthDtos.LoginResponse;
 import com.example.carphone.dto.AuthDtos.WechatLoginRequest;
-import com.example.carphone.model.Owner;
 import com.example.carphone.repository.InMemoryStore;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,24 +24,18 @@ public class AuthService {
 
     public LoginResponse login(WechatLoginRequest request) {
         String openid = resolveOpenid(request.code());
-        Owner owner = store.findOwnerByOpenid(openid)
-                .orElseGet(() -> store.saveOwner(new Owner(
-                        UUID.randomUUID().toString(),
-                        openid,
-                        request.nickname() == null ? "" : request.nickname(),
-                        Instant.now()
-                )));
+        // 保存token，关联openid
         String token = UUID.randomUUID().toString().replace("-", "");
-        store.saveToken(token, owner.id());
-        return new LoginResponse(token, owner.id(), owner.openid());
+        store.saveToken(token, openid);
+        return new LoginResponse(token, openid, openid);
     }
 
-    public Owner requireOwner(String authorization) {
+    public String requireOpenid(String authorization) {
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             throw new UnauthorizedException("请先登录");
         }
         String token = authorization.substring("Bearer ".length()).trim();
-        return store.findOwnerByToken(token).orElseThrow(() -> new UnauthorizedException("登录已失效"));
+        return store.findOpenidByToken(token).orElseThrow(() -> new UnauthorizedException("登录已失效"));
     }
 
     private String resolveOpenid(String code) {

@@ -1,0 +1,42 @@
+<view class="container">
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">← 返回</view>
+    <view class="title">{{nickname}}的贴图</view>
+  </view>
+
+  <view class="sticker-grid" wx:if="{{stickers.length > 0}}">
+    <view 
+      class="sticker-card" 
+      wx:for="{{stickers}}" 
+      wx:key="id"
+      bindtap="viewSticker"
+      data-sticker="{{item}}"
+    >
+      <view class="sticker-preview">
+        <image class="preview-img" src="{{item.finalImageUrl}}" mode="aspectFill" wx:if="{{item.finalImageUrl}}"></image>
+        <view class="placeholder-img" wx:else>
+          <text class="placeholder-icon">🎨</text>
+        </view>
+      </view>
+      <view class="sticker-info">
+        <view class="plate-no">{{item.plateNo}}</view>
+        <view class="template-name">{{item.ownerName}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{!loading && stickers.length === 0}}">
+    <view class="empty-icon">🎨</view>
+    <view class="empty-text">暂无贴图</view>
+    <view class="empty-hint">点击下方按钮从贴图库中选择制作</view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <view class="create-btn" bindtap="createSticker">
+    <text class="plus">+</text>
+    <text>制作新贴图</text>
+  </view>
+</view>
