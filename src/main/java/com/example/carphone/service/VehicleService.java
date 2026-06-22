@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 public class VehicleService {
-    private static final String DEFAULT_COMFORT = "您好，给您添麻烦了。车主已开启挪车电话，请点击下方按钮联系车主，感谢您的理解。";
+    private static final String DEFAULT_COMFORT = "\u60a8\u597d\uff0c\u7ed9\u60a8\u6dfb\u9ebb\u7e66\u4e86\u3002\u8f66\u4e3b\u5df2\u5f00\u542f\u632f\u8f66\u7535\u8bdd\uff0c\u8bf7\u70b9\u51fb\u4e0b\u65b9\u6309\u94ae\u8054\u7cfb\u8f66\u4e3b\uff0c\u611f\u8c22\u60a8\u7684\u7406\u89e3\u3002";
 
     private final InMemoryStore store;
     private final QrCodeService qrCodeService;
@@ -43,8 +43,12 @@ public class VehicleService {
         return store.findVehiclesByOwner(owner.id()).stream().map(this::toOwnerResponse).toList();
     }
 
+    public VehicleCard findById(String id) {
+        return store.findVehicle(id).orElseThrow(() -> new NotFoundException("\u8f66\u8f86\u4e8c\u7ef4\u7801\u4e0d\u5b58\u5728"));
+    }
+
     public PublicVehicleResponse publicInfo(String id) {
-        VehicleCard vehicle = store.findVehicle(id).orElseThrow(() -> new NotFoundException("车辆二维码不存在"));
+        VehicleCard vehicle = findById(id);
         return new PublicVehicleResponse(
                 vehicle.id(),
                 vehicle.ownerName(),
@@ -55,7 +59,11 @@ public class VehicleService {
         );
     }
 
-    private VehicleResponse toOwnerResponse(VehicleCard vehicle) {
+    public QrCodeService qrCodeService() {
+        return qrCodeService;
+    }
+
+    public VehicleResponse toResponse(VehicleCard vehicle) {
         return new VehicleResponse(
                 vehicle.id(),
                 vehicle.ownerName(),
@@ -66,6 +74,10 @@ public class VehicleService {
                 "/api/vehicles/" + vehicle.id() + "/qrcode",
                 qrCodeService.publicMoveCarUrl(vehicle.id())
         );
+    }
+
+    private VehicleResponse toOwnerResponse(VehicleCard vehicle) {
+        return toResponse(vehicle);
     }
 
     private String comfort(String value) {
